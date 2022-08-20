@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'model/janken.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -23,6 +25,17 @@ class JnakenPage extends StatefulWidget {
 }
 
 class _JnakenPageState extends State<JnakenPage> {
+  var myHand = '✊';
+  var computerHand = '✊';
+  var jankenResult = 'あいこ';
+  final jankenSystem = JankenSystem();
+  void jankenpon(String hand) {
+    myHand = hand;
+    computerHand = ['✊','✌️','✋',][Random().nextInt(2)];
+    jankenResult = jankenSystem.result(myHand, computerHand);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,20 +47,21 @@ class _JnakenPageState extends State<JnakenPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-                'あいこ',
+                jankenResult,
               style: TextStyle(
                 fontSize: 30
               ),
             ),
             SizedBox(height: 48,),
             Text(
-                '✊',
+                computerHand,
               style: TextStyle(
                 fontSize: 50
               ),
             ),
             SizedBox(height: 48,),
-            Text('✊',
+            Text(
+              myHand,
               style: TextStyle(
                   fontSize: 50
               ),
@@ -57,15 +71,21 @@ class _JnakenPageState extends State<JnakenPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      jankenpon('✊');
+                    },
                     child: Text('✊')
                 ),
                 ElevatedButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      jankenpon('✌️');
+                    },
                     child: Text('✌️')
                 ),
                 ElevatedButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      jankenpon('✋');
+                    },
                     child: Text('✋')
                 ),
               ],
