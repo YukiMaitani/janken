@@ -33,11 +33,12 @@ class JnakenPage extends HookConsumerWidget {
     final computerHand = ref.watch(computerHandProvider);
 
     final jankenResult = ref.watch(jankenResultProvider);
-
     void jankenpon(String hand) {
       myHandNotifier.state = hand;
       computerHandNotifier.state = ['✊','✌️','✋',][Random().nextInt(2)];
     }
+
+    final winPercent = ref.watch(winPercentProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,6 +48,13 @@ class JnakenPage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+                winPercent.toString(),
+              style: TextStyle(
+                fontSize: 30
+              ),
+            ),
+            SizedBox(height: 25,),
             Text(
                 jankenResult,
               style: TextStyle(
