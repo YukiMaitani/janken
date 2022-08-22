@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'model/janken.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,27 +19,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class JnakenPage extends StatefulWidget {
+final myHandProvider = StateProvider<String>((ref) => '✊');
+final computerHandProvider = StateProvider<String>((ref) => '✊');
+final jankenResultProvider = Provider((ref) {
+  final jankenSystem = JankenSystem();
+  final String myHand = ref.watch(myHandProvider);
+  final String computerHand = ref.watch(computerHandProvider);
+  final result = jankenSystem.result(myHand, computerHand);
+  return result;
+});
+
+class JnakenPage extends HookConsumerWidget {
   const JnakenPage({Key? key}) : super(key: key);
 
   @override
-  State<JnakenPage> createState() => _JnakenPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
 
-class _JnakenPageState extends State<JnakenPage> {
-  var myHand = '✊';
-  var computerHand = '✊';
-  var jankenResult = 'あいこ';
-  final jankenSystem = JankenSystem();
-  void jankenpon(String hand) {
-    myHand = hand;
-    computerHand = ['✊','✌️','✋',][Random().nextInt(2)];
-    jankenResult = jankenSystem.result(myHand, computerHand);
-    setState(() {});
-  }
+    final myHandNotifier = ref.watch(myHandProvider.notifier);
+    final myHand = ref.watch(myHandProvider);
 
-  @override
-  Widget build(BuildContext context) {
+    final computerHandNotifier = ref.watch(computerHandProvider.notifier);
+    final computerHand = ref.watch(computerHandProvider);
+
+    final jankenResult = ref.watch(jankenResultProvider);
+
+    void jankenpon(String hand) {
+      myHandNotifier.state = hand;
+      computerHandNotifier.state = ['✊','✌️','✋',][Random().nextInt(2)];
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('じゃんけん'),
