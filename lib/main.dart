@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:janken/provider/jankenProvider.dart';
 
 import 'model/janken.dart';
 import 'package:flutter/material.dart';
@@ -18,16 +19,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-final myHandProvider = StateProvider<String>((ref) => '✊');
-final computerHandProvider = StateProvider<String>((ref) => '✊');
-final jankenResultProvider = Provider((ref) {
-  final jankenSystem = JankenSystem();
-  final String myHand = ref.watch(myHandProvider);
-  final String computerHand = ref.watch(computerHandProvider);
-  final result = jankenSystem.result(myHand, computerHand);
-  return result;
-});
 
 class JnakenPage extends HookConsumerWidget {
   const JnakenPage({Key? key}) : super(key: key);
