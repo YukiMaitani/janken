@@ -28,17 +28,29 @@ class JnakenPage extends HookConsumerWidget {
 
     final myHandNotifier = ref.watch(myHandProvider.notifier);
     final myHand = ref.watch(myHandProvider);
-
     final computerHandNotifier = ref.watch(computerHandProvider.notifier);
     final computerHand = ref.watch(computerHandProvider);
-
+    final winPercent = ref.watch(winPercentProvider);
     final jankenResult = ref.watch(jankenResultProvider);
+
     void jankenpon(String hand) {
       myHandNotifier.state = hand;
       computerHandNotifier.state = ['✊','✌️','✋',][Random().nextInt(2)];
+      final numberOfWinsController = ref.watch(numberOfWinsProvider.notifier);
+      final numberOfMatchesController = ref.watch(numberOfMatchesProvider.notifier);
+      final result = ref.watch(jankenResultProvider);
+      switch (result) {
+        case 'かち':
+          numberOfMatchesController.state++;
+          numberOfWinsController.state++;
+          break;
+        case 'まけ':
+          numberOfMatchesController.state++;
+          break;
+        case 'ひきわけ':
+          break;
+      }
     }
-
-    final winPercent = ref.watch(winPercentProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +61,7 @@ class JnakenPage extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-                winPercent.toString(),
+              '${winPercent.toStringAsFixed(1)}%',
               style: TextStyle(
                 fontSize: 30
               ),
